@@ -6,6 +6,7 @@ __license__ = "MIT"
 import os
 import time
 import sys
+import logging
 
 DEFAULT_FORMAT_STRING = '%(asctime)s|%(levelname)8s|%(name)10s|%(lineno)3s| %(message)s'
 
@@ -76,7 +77,6 @@ if __name__ == "__main__":
     setup_console()
     setup_file("logsetup_test")
 
-    import logging
     log = logging.getLogger(__name__)
 
     log.info("A piece of info")
