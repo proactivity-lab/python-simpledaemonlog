@@ -48,18 +48,18 @@ def setup_console(level=logging.NOTSET, fs=DEFAULT_FORMAT_STRING):
     rootlogger.addHandler(console)
 
 
-def setup_file(application_name, log_folder="log", level=logging.NOTSET, fs=DEFAULT_FORMAT_STRING):
+def setup_file(application_name, logdir="log", level=logging.NOTSET, fs=DEFAULT_FORMAT_STRING):
     """
      Directs printf to file with INFO level.
     """
-    if not os.path.isdir(log_folder):
-        os.makedirs(log_folder)
+    if not os.path.isdir(logdir):
+        os.makedirs(logdir)
 
     utc = time.gmtime()
     ts = time.strftime("%Y%m%d_%H%M%S%Z", utc)
 
     logfilename = "log_{}_{}.txt".format(application_name, ts)
-    logfile = logging.FileHandler(os.path.join(log_folder, logfilename))
+    logfile = logging.FileHandler(os.path.join(logdir, logfilename))
 
     formatter = logging.Formatter(fs)
     logfile.setFormatter(formatter)
