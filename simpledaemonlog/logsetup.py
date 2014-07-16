@@ -59,7 +59,15 @@ def setup_file(application_name, logdir="log", level=logging.NOTSET, fs=DEFAULT_
     ts = time.strftime("%Y%m%d_%H%M%S%Z", utc)
 
     logfilename = "log_{}_{}.txt".format(application_name, ts)
-    logfile = logging.FileHandler(os.path.join(logdir, logfilename))
+    loglatest = "log_{}_latest.txt".format(application_name)
+    logfilepath = os.path.join(logdir, logfilename)
+    loglinkpath = os.path.join(logdir, loglatest)
+    logfile = logging.FileHandler(logfilepath)
+
+    if os.path.islink(loglinkpath):
+        os.unlink(loglinkpath)
+
+    os.symlink(logfilepath, loglinkpath)
 
     formatter = logging.Formatter(fs)
     logfile.setFormatter(formatter)
