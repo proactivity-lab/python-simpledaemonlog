@@ -67,7 +67,7 @@ def setup_file(application_name, logdir="log", level=logging.NOTSET, fs=DEFAULT_
     if os.path.islink(loglinkpath):
         os.unlink(loglinkpath)
 
-    os.symlink(logfilepath, loglinkpath)
+    os.symlink(logfilename, loglinkpath)
 
     formatter = logging.Formatter(fs)
     logfile.setFormatter(formatter)
