@@ -8,8 +8,8 @@ import time
 import sys
 import logging
 
-DEFAULT_FORMAT_STRING = '%(asctime)s|%(levelname)8s|%(name)10s|%(lineno)3s| %(message)s'
-
+DEFAULT_FORMAT_STRING = '%(asctime)s|%(levelname)8s|%(module)20s|%(lineno)4s| %(message)s'
+COLORED_FORMAT_STRING = '%(log_color)s%(asctime)s%(reset)s|%(module)20s|%(lineno)4s| %(log_color)s%(message)s'
 
 class StdLogger(object):
     def __init__(self, out, log):
@@ -35,11 +35,28 @@ class PrintfFilter(object):
             return True
 
 
-def setup_console(level=logging.NOTSET, fs=DEFAULT_FORMAT_STRING):
+def setup_console(level=logging.NOTSET, fs=DEFAULT_FORMAT_STRING, color=False):
     console = logging.StreamHandler()
     console.addFilter(PrintfFilter())
 
-    formatter = logging.Formatter(fs)
+    if color:
+        """ https://pypi.python.org/pypi/colorlog """
+        from colorlog import ColoredFormatter
+        formatter = ColoredFormatter(
+            COLORED_FORMAT_STRING, datefmt=None, reset=True,
+            log_colors={
+                #'DEBUG':    'cyan',
+                'INFO':     'white',
+                'WARNING':  'yellow',
+                'ERROR':    'red',
+                'CRITICAL': 'red,bg_white',
+            },
+            secondary_log_colors={},
+            style='%'
+        )
+    else:
+        formatter = logging.Formatter(fs)
+
     console.setFormatter(formatter)
     console.setLevel(level)
 
@@ -87,10 +104,12 @@ if __name__ == "__main__":
 
     log = logging.getLogger(__name__)
 
-    log.info("A piece of info")
     log.debug("Some debug")
+    log.info("A piece of info")
     log.warning("A small warning")
     log.error("A big error")
+    log.critical("A critical message")
+
     try:
         raise TypeError("An ugly TypeError")
     except TypeError:
