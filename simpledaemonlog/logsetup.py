@@ -7,6 +7,11 @@ import os
 import time
 import sys
 import logging
+import logging.config
+import yaml
+
+import logging
+log = logging.getLogger(__name__)
 
 DEFAULT_FORMAT_STRING = '%(asctime)s|%(levelname)8s|%(module)20s|%(lineno)4s| %(message)s'
 COLORED_FORMAT_STRING = '%(log_color)s%(asctime)s%(reset)s|%(module)20s|%(lineno)4s| %(log_color)s%(message)s'
@@ -35,7 +40,18 @@ class PrintfFilter(object):
             return True
 
 
-def setup_console(level=logging.NOTSET, fs=DEFAULT_FORMAT_STRING, color=False):
+def _load_settings(path=None):
+    if path is not None and os.path.exists(path):
+        with open(path, 'rt') as f:
+            config = yaml.load(f.read())
+        logging.config.dictConfig(config)
+        return path
+    return None
+
+
+def setup_console(level=logging.NOTSET, fs=DEFAULT_FORMAT_STRING, settings=None, color=False):
+    loaded = _load_settings(settings)
+
     console = logging.StreamHandler()
     console.addFilter(PrintfFilter())
 
@@ -63,14 +79,18 @@ def setup_console(level=logging.NOTSET, fs=DEFAULT_FORMAT_STRING, color=False):
     rootlogger = logging.getLogger("")
     rootlogger.setLevel(min(level, rootlogger.getEffectiveLevel()))
     rootlogger.addHandler(console)
+    if loaded:
+        log.debug("logging config loaded from {:s}".format(loaded))
 
 
-def setup_file(application_name, logdir="log", level=logging.NOTSET, fs=DEFAULT_FORMAT_STRING):
+def setup_file(application_name, logdir="log", level=logging.NOTSET, fs=DEFAULT_FORMAT_STRING, settings=None):
     """
      Directs printf to file with INFO level.
     """
     if not os.path.isdir(logdir):
         os.makedirs(logdir)
+
+    loaded = _load_settings(settings)
 
     utc = time.gmtime()
     ts = time.strftime("%Y%m%d_%H%M%S%Z", utc)
@@ -84,7 +104,8 @@ def setup_file(application_name, logdir="log", level=logging.NOTSET, fs=DEFAULT_
     if os.path.islink(loglinkpath):
         os.unlink(loglinkpath)
 
-    os.symlink(logfilename, loglinkpath)
+    if hasattr(os, "symlink"):
+        os.symlink(logfilename, loglinkpath)
 
     formatter = logging.Formatter(fs)
     logfile.setFormatter(formatter)
@@ -96,7 +117,8 @@ def setup_file(application_name, logdir="log", level=logging.NOTSET, fs=DEFAULT_
 
     sys.stderr = StdLogger(sys.stderr, logging.error)
     sys.stdout = StdLogger(sys.stdout, logging.info)
-
+    if loaded:
+        log.debug("logging config loaded from {:s}".format(loaded))
 
 if __name__ == "__main__":
     setup_console()
