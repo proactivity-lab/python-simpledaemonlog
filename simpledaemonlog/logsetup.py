@@ -1,17 +1,18 @@
 """logsetup.py: A simple python logging setup for console and local log files."""
 
-__author__ = 'Raido Pahtma'
-__license__ = "MIT"
-
 import os
 import time
 import sys
-import logging
 import logging.config
 import yaml
 
 import logging
 log = logging.getLogger(__name__)
+
+
+__author__ = 'Raido Pahtma'
+__license__ = "MIT"
+
 
 DEFAULT_FORMAT_STRING = '%(asctime)s|%(levelname)8s|%(module)20s|%(lineno)4s| %(message)s'
 COLORED_FORMAT_STRING = '%(log_color)s%(asctime)s%(reset)s|%(module)20s|%(lineno)4s| %(log_color)s%(message)s'
