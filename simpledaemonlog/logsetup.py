@@ -4,6 +4,7 @@ import os
 import time
 import sys
 import logging.config
+import logging.handlers
 import yaml
 
 import logging
@@ -16,6 +17,7 @@ __license__ = "MIT"
 
 DEFAULT_FORMAT_STRING = '%(asctime)s|%(levelname)8s|%(module)20s|%(lineno)4s| %(message)s'
 COLORED_FORMAT_STRING = '%(log_color)s%(asctime)s%(reset)s|%(module)20s|%(lineno)4s| %(log_color)s%(message)s'
+
 
 class StdLogger(object):
     def __init__(self, out, log):
@@ -84,7 +86,7 @@ def setup_console(level=logging.NOTSET, fs=DEFAULT_FORMAT_STRING, settings=None,
         log.debug("logging config loaded from {:s}".format(loaded))
 
 
-def setup_file(application_name, logdir="log", level=logging.NOTSET, fs=DEFAULT_FORMAT_STRING, settings=None):
+def setup_file(application_name, logdir="log", level=logging.NOTSET, fs=DEFAULT_FORMAT_STRING, settings=None, backups=8):
     """
      Directs printf to file with INFO level.
     """
@@ -100,7 +102,7 @@ def setup_file(application_name, logdir="log", level=logging.NOTSET, fs=DEFAULT_
     loglatest = "log_{}_latest.txt".format(application_name)
     logfilepath = os.path.join(logdir, logfilename)
     loglinkpath = os.path.join(logdir, loglatest)
-    logfile = logging.FileHandler(logfilepath)
+    logfile = logging.handlers.TimedRotatingFileHandler(logfilepath, when="W6", backupCount=backups)
 
     if os.path.islink(loglinkpath):
         os.unlink(loglinkpath)
@@ -120,6 +122,7 @@ def setup_file(application_name, logdir="log", level=logging.NOTSET, fs=DEFAULT_
     sys.stdout = StdLogger(sys.stdout, logging.info)
     if loaded:
         log.debug("logging config loaded from {:s}".format(loaded))
+
 
 if __name__ == "__main__":
     setup_console()
