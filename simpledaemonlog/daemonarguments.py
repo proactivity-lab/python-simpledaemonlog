@@ -1,6 +1,6 @@
-"""daemonarguments.py: Common options for daemons with argconfparse and simplelogging."""
+"""daemonarguments.py: Common options for daemons with argconfparse and simpledaemonlog."""
 
-import simplelogging.logsetup
+import simpledaemonlog.logsetup
 from argconfparse.argconfparse import arg_str2bool
 
 
@@ -17,10 +17,10 @@ def add_daemon_arguments(parser):
 
 def setup_daemon(args, name):
     if args.daemon is False:
-        simplelogging.logsetup.setup_console(color=args.colorlog)
+        logsetup.setup_console(color=args.colorlog)
 
     if args.logdir is not None:
-        simplelogging.logsetup.setup_file(name, logdir=args.logdir)
+        logsetup.setup_file(name, logdir=args.logdir)
     elif args.daemon:
         print "WARNING Logging not configured!"
         print args
