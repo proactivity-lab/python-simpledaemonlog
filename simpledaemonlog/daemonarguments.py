@@ -1,6 +1,6 @@
 """daemonarguments.py: Common options for daemons with argconfparse and simpledaemonlog."""
 
-import simpledaemonlog.logsetup
+from simpledaemonlog import logsetup
 from argconfparse.argconfparse import arg_str2bool
 
 
