@@ -1,11 +1,14 @@
-"""daemonarguments.py: Common options for daemons with argconfparse and simpledaemonlog."""
+"""daemonarguments.py: Common argparse options for daemons with simpledaemonlog."""
 
 from simpledaemonlog import logsetup
-from argconfparse.argconfparse import arg_str2bool
-
 
 __author__ = 'Raido Pahtma'
 __license__ = "MIT"
+
+
+def arg_str2bool(v):
+    """ Use this for boolean options, regular bool is always treated as True. """
+    return v.lower() in ("yes", "y", "true", "t", "1")
 
 
 def add_daemon_arguments(parser):

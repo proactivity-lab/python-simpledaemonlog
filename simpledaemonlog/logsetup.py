@@ -14,6 +14,7 @@ log = logging.getLogger(__name__)
 __author__ = 'Raido Pahtma'
 __license__ = "MIT"
 
+version = "0.2.0"
 
 DEFAULT_FORMAT_STRING = '%(asctime)s|%(levelname)8s|%(module)20s|%(lineno)4s| %(message)s'
 COLORED_FORMAT_STRING = '%(log_color)s%(asctime)s%(reset)s|%(module)20s|%(lineno)4s| %(log_color)s%(message)s'
@@ -77,7 +78,7 @@ def setup_console(level=logging.NOTSET, fs=DEFAULT_FORMAT_STRING, settings=None,
         formatter = logging.Formatter(fs)
 
     console.setFormatter(formatter)
-    console.setLevel(level)
+    console.setLevel(logging.NOTSET)
 
     rootlogger = logging.getLogger("")
     rootlogger.setLevel(min(level, rootlogger.getEffectiveLevel()))
@@ -102,17 +103,19 @@ def setup_file(application_name, logdir="log", level=logging.NOTSET, fs=DEFAULT_
     loglatest = "log_{}_latest.txt".format(application_name)
     logfilepath = os.path.join(logdir, logfilename)
     loglinkpath = os.path.join(logdir, loglatest)
-    logfile = logging.handlers.TimedRotatingFileHandler(logfilepath, when="W6", backupCount=backups)
-
-    if os.path.islink(loglinkpath):
-        os.unlink(loglinkpath)
+    if backups:
+        logfile = logging.handlers.TimedRotatingFileHandler(logfilepath, when="W6", backupCount=backups)
+    else:
+        logfile = logging.FileHandler(logfilepath)
 
     if hasattr(os, "symlink"):
+        if os.path.islink(loglinkpath):
+            os.unlink(loglinkpath)
         os.symlink(logfilename, loglinkpath)
 
     formatter = logging.Formatter(fs)
     logfile.setFormatter(formatter)
-    logfile.setLevel(level)
+    logfile.setLevel(logging.NOTSET)
 
     rootlogger = logging.getLogger("")
     rootlogger.setLevel(min(level, rootlogger.getEffectiveLevel()))

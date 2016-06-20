@@ -1,1 +1,4 @@
 *.pyc
+dist
+.idea
+simpledaemonlog.egg-info
