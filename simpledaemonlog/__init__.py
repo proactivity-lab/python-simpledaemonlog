@@ -1,6 +1,6 @@
 """__init__.py: Module init."""
 
-from .logsetup import version
+version = "0.2.1"
 
 __author__ = "Raido Pahtma"
 __license__ = "MIT"

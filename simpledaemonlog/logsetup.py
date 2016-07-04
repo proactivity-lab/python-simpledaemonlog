@@ -14,8 +14,6 @@ log = logging.getLogger(__name__)
 __author__ = 'Raido Pahtma'
 __license__ = "MIT"
 
-version = "0.2.0"
-
 DEFAULT_FORMAT_STRING = '%(asctime)s|%(levelname)8s|%(module)20s|%(lineno)4s| %(message)s'
 COLORED_FORMAT_STRING = '%(log_color)s%(asctime)s%(reset)s|%(module)20s|%(lineno)4s| %(log_color)s%(message)s'
 
