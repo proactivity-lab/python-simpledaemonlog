@@ -105,7 +105,7 @@ def setup_file(application_name, logdir="log", level=logging.NOTSET, fs=DEFAULT_
         logfile = logging.handlers.TimedRotatingFileHandler(logfilepath, backupCount=backups, when=backupIntervalUnit, interval=backupInterval)
     else:
         # Expect logrotate to pull the file out from underneath us
-        logfile = logging.WatchedFileHandler(logfilepath)
+        logfile = logging.handlers.WatchedFileHandler(logfilepath)
 
     if hasattr(os, "symlink"):
         if os.path.islink(loglinkpath):
