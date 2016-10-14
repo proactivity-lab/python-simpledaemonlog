@@ -85,7 +85,7 @@ def setup_console(level=logging.NOTSET, fs=DEFAULT_FORMAT_STRING, settings=None,
         log.debug("logging config loaded from {:s}".format(loaded))
 
 
-def setup_file(application_name, logdir="log", level=logging.NOTSET, fs=DEFAULT_FORMAT_STRING, settings=None, backups=8):
+def setup_file(application_name, logdir="log", level=logging.NOTSET, fs=DEFAULT_FORMAT_STRING, settings=None, backups=8, backupInterval=1, backupIntervalUnit="W6"):
     """
      Directs printf to file with INFO level.
     """
@@ -102,9 +102,10 @@ def setup_file(application_name, logdir="log", level=logging.NOTSET, fs=DEFAULT_
     logfilepath = os.path.join(logdir, logfilename)
     loglinkpath = os.path.join(logdir, loglatest)
     if backups:
-        logfile = logging.handlers.TimedRotatingFileHandler(logfilepath, when="W6", backupCount=backups)
+        logfile = logging.handlers.TimedRotatingFileHandler(logfilepath, backupCount=backups, when=backupIntervalUnit, interval=backupInterval)
     else:
-        logfile = logging.FileHandler(logfilepath)
+        # Expect logrotate to pull the file out from underneath us
+        logfile = logging.WatchedFileHandler(logfilepath)
 
     if hasattr(os, "symlink"):
         if os.path.islink(loglinkpath):
