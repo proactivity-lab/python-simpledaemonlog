@@ -28,5 +28,5 @@ def setup_daemon(args, name):
     if args.logdir is not None:
         logsetup.setup_file(name, logdir=args.logdir, backups=args.rotate_count, backupInterval=args.rotate_interval, backupIntervalUnit=args.rotate_unit)
     elif args.daemon:
-        print "WARNING Logging not configured!"
-        print args
+        print("WARNING Logging not configured!")
+        print(args)
