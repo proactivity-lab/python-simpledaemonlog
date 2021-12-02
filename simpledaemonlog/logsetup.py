@@ -19,6 +19,7 @@ COLORED_FORMAT_STRING = '%(log_color)s%(asctime)s%(reset)s|%(module)20s|%(lineno
 
 
 class StdLogger(object):
+
     def __init__(self, out, log):
         self._out = out
         self._log = log
@@ -31,6 +32,9 @@ class StdLogger(object):
     def write(self, txt):
         self._out.write(txt)
         self._wrt_flt_std_log(txt.rstrip())
+
+    def flush(self):
+        pass
 
 
 class PrintfFilter(object):
